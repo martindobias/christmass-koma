@@ -1,0 +1,19 @@
+name:                christmas-koma
+version:             0.1.0.0
+synopsis:            Christmas 10pad contest
+description:         README
+homepage:            http://github.com/martindobias/christmas-koma
+license:             BSD3
+license-file:        LICENSE
+author:              Martin Dobias
+maintainer:          martin.dobias@gmail.com
+copyright:           CC
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable christmas-koma
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5, argparser
