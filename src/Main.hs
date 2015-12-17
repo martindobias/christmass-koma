@@ -18,6 +18,7 @@ module Main where
       <$> mkApp inputParser
 
   parsePhrase :: String -> Passphrase
+  parsePhrase [] = Passphrase [[]]
   parsePhrase cs = Passphrase (map (\c -> [c | c /= '_']) cs)
 
   parseMessage :: String -> String
