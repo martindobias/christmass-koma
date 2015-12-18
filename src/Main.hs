@@ -18,10 +18,10 @@ module Main where
       <$> mkApp inputParser
 
   parsePhrase :: String -> Passphrase
-  parsePhrase [] = Passphrase [[]]
-  parsePhrase cs = Passphrase (map (\c -> [c | c /= '_']) cs)
+  parsePhrase [] = [[]]
+  parsePhrase cs = map (\c -> [c | c /= '_']) cs
 
-  parseMessage :: String -> String
+  parseMessage :: String -> Message
   parseMessage [] = []
   parseMessage [c] = if c == '\r' || c == '\n' then [] else error "Invalid input"
   parseMessage (h : l : cs) = chr (digitToInt h * 16 + digitToInt l) : parseMessage cs
@@ -32,17 +32,17 @@ module Main where
     m <- readFile mf
     let ms = map parseMessage $ lines m
         p = parsePhrase pf
-        r = crack (Cracker ms p)
+        r = crack ms p
     putStrLn "Original messages"
-    print ms
+    mapM_ print ms
     putStrLn ""
     putStrLn "Decoded messages"
-    print (map (decode r) ms)
+    mapM_ (print . decode r) ms
     putStrLn ""
-    putStrLn "Using Passphrase"
-    print r
+    putStrLn "Resulting passphrase candidate"
+    mapM_ print r
 
-  main::IO()
+  main :: IO()
   main = do
     input <- inputInterface
     runApp input app
