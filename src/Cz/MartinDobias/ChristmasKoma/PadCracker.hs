@@ -20,7 +20,7 @@ module Cz.MartinDobias.ChristmasKoma.PadCracker (
   zipAll xs = map head (filterEmpty xs) : zipAll (filterEmpty (map tail (filterEmpty xs)))
     where filterEmpty = filter (not . null)
 
-  legalOutput = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ " ,.!?\'()/%$&*=-"
+  legalOutput = ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ " ,.:!-\'"
   legalOutputInitial = ['A'..'Z'] ++ ['0'..'9']
   possibleCandidates = [(chr 0) .. (chr 255)]
 
@@ -38,7 +38,7 @@ module Cz.MartinDobias.ChristmasKoma.PadCracker (
   findCandidatesInitial (x : xs) (p : ps) = (if null p then valid legalOutputInitial x possibleCandidates else valid legalOutputInitial x p) : findCandidates xs ps
 
   crack :: [Message] -> Passphrase -> Passphrase
-  crack ms ps = findCandidates (zipAll ms) (infinitePassphrase ps)
+  crack ms ps = findCandidatesInitial (zipAll ms) (infinitePassphrase ps)
 
   infinitePassphrase p = p ++ infinitePassphrase p
 
@@ -47,6 +47,6 @@ module Cz.MartinDobias.ChristmasKoma.PadCracker (
   decodeOrHide ((c, [p]) : m) = chr (ord c `xor` ord p) : decodeOrHide m
   decodeOrHide ((_, p : ps) : m) = '_' : decodeOrHide m
 
-  decode :: Passphrase -> String -> String
+  decode :: Passphrase -> Message -> String
   decode cs m = decodeOrHide zipped
     where zipped = zip m (infinitePassphrase cs)
